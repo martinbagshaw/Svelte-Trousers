@@ -27,10 +27,15 @@
     list-style: none;
     li {
       padding: 1rem;
+      button {
+        margin: 0;
+        margin-left: 1rem;
+      }
     }
   }
 
-  button {
+  button,
+  .button {
     cursor: pointer;
     padding: 0.4em 0.8em;
     background-color: #5091DD;
@@ -39,6 +44,12 @@
     transition: background ease 0.3s;
     &:hover {
       background-color: #2177da;
+    }
+    &.remove {
+      background-color: tomato;
+      &:hover {
+        background-color: rgb(180, 29, 3);
+      }
     }
   }
 
@@ -57,19 +68,33 @@
     }
   }
 
+  .todo-form {
+    margin: 1rem 0;
+    padding: 1rem;
+    input {
+      margin: 0;
+      margin-right: 1rem;
+    }
+  }
+
 </style>
 
 <script>
-  let todos = ['asd', 'asda'];
+  let todos = [];
   let showList = true;
-  // $: console.log(`todos ${todos}`);
+  let currentItem = '';
 
   function toggle() {
 		showList = !showList;
 	}
 
-	function add(todo) {
-		todos = [...todos, todo];
+	function add() {
+    todos = [...todos, currentItem];
+    currentItem = ''
+  }
+  
+  function remove(value) {
+		todos = todos.filter(item => item !== value);
 	}
 </script>
 
@@ -79,14 +104,26 @@
   </header>
 
   <section class="todo-panel">
+    {#if todos.length}
     <button on:click={toggle}>
       {showList ? 'Hide' : 'Show'} Todos
-     </button>
+    </button>
+    {/if}
+
+    <form class="todo-form" on:submit|preventDefault={add}>
+      <input bind:value={currentItem}>
+      <button type=submit disabled={!currentItem}>
+        Add Todo
+      </button>
+    </form>
   
     {#if todos.length && showList}
       <ul>
         {#each todos as todo}
-          <li>{todo}</li>
+          <li>
+            {todo}
+            <button class="remove" on:click={() => remove(todo)}>X</button>      
+          </li>
         {/each}
       </ul>
     {/if}
