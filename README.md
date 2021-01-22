@@ -45,3 +45,4 @@ _Setup and stuff_
 - [css backgrounds](https://freefrontend.com/css-background-patterns/)
 - [writing css with svelte](https://css-tricks.com/what-i-like-about-writing-styles-with-svelte/)
 - [Todo list tutorial on MDN](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_Todo_list_beginning)
+- Console logs have a dollar sign before them: `$: console.log(`todos ${todos}`);`
