@@ -1,0 +1,46 @@
+$red: red;
+$lineColor : #030617;
+$step : 3;
+$borderWeight: 1px;
+
+@function borderShadow ($n) {
+  $value: '0px 0px #{$lineColor}';
+  @for $i from 0 through $n {
+    $value: '#{$value} , 0px #{($step)*$i}px #{$lineColor}'
+  }
+  @return unquote($value);
+}
+
+@function stripeShadow ($n) {
+  $value: '0px 0px #{$lineColor}';
+  @for $i from 0 through $n {
+    $value: '#{$value} , #{($step)*$i}px 0px #{$lineColor}'
+  }
+  @return unquote($value);
+}
+
+$border:  borderShadow(1000);
+$stripe:  stripeShadow(1000);
+
+:global(body) {
+  padding: 0;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #5091DD 0%, #030617 100%);
+  color: white;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  height: $borderWeight;
+  box-shadow: $border;
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: $borderWeight;
+    height: 100%;
+    box-shadow: $stripe;
+  }
+}
