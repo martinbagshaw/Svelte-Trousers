@@ -6,6 +6,6 @@
   <Todos />
 </main>
 
-<style type="text/scss">
+<style lang="scss">
   @import "./main.scss";
 </style>

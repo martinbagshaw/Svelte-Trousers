@@ -11,6 +11,8 @@ import { writable } from "svelte/store";
  * https://stackoverflow.com/questions/62884259/making-class-instance-reactive-in-svelte-using-stores
  *
  * https://devlinduldulao.pro/svelte-in-a-nutshell-with-store-code-sample/
+ *
+ * https://gist.github.com/3lpsy/55da83779a50f603a78ae8331e360a37
  */
 
 export class TodoStore {
@@ -21,8 +23,13 @@ export class TodoStore {
 
   constructor() {
     let { subscribe, update } = writable(this); //can also use 'set'
-    this.subscribe = subscribe; // seems to be required for the store to work
+    this.subscribe = subscribe;
     this._update = update;
+  }
+
+  // seems to be required for the store to work
+  public _subscribe(run) {
+    return this._subscribe(run);
   }
 
   public toggleList() {
@@ -46,9 +53,42 @@ export class TodoStore {
     });
   }
 
-  // public saveTodos() {}
+  public saveTodos() {
+    if (this.todos.length) {
+      localStorage.setItem("svelte-todos", JSON.stringify(this.todos));
+    }
+  }
 
-  // public deleteTodos() {}
+  public hasSavedTodos() {
+    return Boolean(localStorage.getItem("svelte-todos"));
+  }
+
+  public hasModifiedTodos() {
+    const storedTodos = localStorage.getItem("svelte-todos");
+    if (storedTodos) {
+      return Boolean(this.todos.length !== JSON.parse(storedTodos).length);
+    }
+    return false;
+  }
+
+  public getSavedTodos() {
+    const storedTodos = localStorage.getItem("svelte-todos");
+
+    if (storedTodos) {
+      this._update((that) => {
+        that.todos = JSON.parse(storedTodos);
+        return that;
+      });
+    }
+  }
+
+  public deleteSavedTodos() {
+    localStorage.removeItem("svelte-todos");
+    this._update((that) => {
+      that.todos = [];
+      return that;
+    });
+  }
 }
 
 export const todoStore = new TodoStore();
