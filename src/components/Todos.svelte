@@ -1,7 +1,21 @@
 <script lang="ts">
-  import { TodoState } from "./TodoState";
+  import { todoStore } from "./TodoStore";
 
-  const state = new TodoState();
+  const handleToggle = () => {
+    todoStore.toggleList();
+  };
+
+  const handleAddTodo = () => {
+    todoStore.addTodo(currentTodo);
+    currentTodo = "";
+  };
+
+  const handleRemoveTodo = (todo: string) => {
+    todoStore.removeTodo(todo);
+  };
+
+  // Local variables
+  let currentTodo = "";
 </script>
 
 <div class="container">
@@ -10,23 +24,24 @@
   </header>
 
   <section class="todo-panel">
-    {#if state.todos.length}
-      <button on:click={state.toggleList}>
-        {state.showList ? "Hide" : "Show"} Todos
+    {#if $todoStore.todos.length}
+      <button on:click={handleToggle}>
+        {$todoStore.showList ? "Hide" : "Show"} Todos
       </button>
+      <!-- <button on:click={todoStore.toggleList}> Save todos </button> -->
     {/if}
 
-    <form class="todo-form" on:submit|preventDefault={state.addTodo}>
-      <input bind:value={state.currentItem} />
-      <button type="submit" disabled={!state.currentItem}> Add Todo </button>
+    <form class="todo-form" on:submit|preventDefault={handleAddTodo}>
+      <input bind:value={currentTodo} />
+      <button type="submit" disabled={!currentTodo}> Add Todo </button>
     </form>
 
-    {#if state.todos.length && state.showList}
+    {#if $todoStore.todos.length && todoStore.showList}
       <ul>
-        {#each state.todos as todo}
+        {#each $todoStore.todos as todo}
           <li>
             {todo}
-            <button class="remove" on:click={() => state.removeTodo(todo)}>X</button>
+            <button class="remove" on:click={() => handleRemoveTodo(todo)}>X</button>
           </li>
         {/each}
       </ul>
