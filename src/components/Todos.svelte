@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { todoStore } from "./TodoStore";
+  import { TodoStore } from "./TodoStore";
 
-  const handleToggle = () => {
-    todoStore.toggleList();
-  };
+  const todoStore = new TodoStore();
 
   const handleAddTodo = () => {
     todoStore.addTodo(currentTodo);
@@ -12,6 +10,10 @@
 
   const handleRemoveTodo = (todo: string) => {
     todoStore.removeTodo(todo);
+  };
+
+  const handleToggle = () => {
+    todoStore.toggleList();
   };
 
   const handleLoad = () => {
@@ -40,7 +42,6 @@
       <button on:click={handleToggle}>
         {$todoStore.showList ? "Hide" : "Show"} Todos
       </button>
-      <!-- <button on:click={todoStore.toggleList}> Save todos </button> -->
     {/if}
 
     <!-- Load -->

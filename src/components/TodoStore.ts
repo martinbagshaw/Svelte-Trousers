@@ -16,41 +16,35 @@ import { writable } from "svelte/store";
  */
 
 export class TodoStore {
+  private subscribers = new Set<Function>();
   public todos: string[] = [];
   public showList = true;
-  public subscribe: Function;
-  private _update: Function;
 
-  constructor() {
-    let { subscribe, update } = writable(this); //can also use 'set'
-    this.subscribe = subscribe;
-    this._update = update;
-  }
+  constructor() {}
 
-  // seems to be required for the store to work
-  public _subscribe(run) {
-    return this._subscribe(run);
-  }
+  public subscribe = (sub) => {
+    this.subscribers.add(sub);
+    sub(this);
+    return () => this.subscribers.delete(sub);
+  };
+
+  notify = () => {
+    this.subscribers.forEach((sub) => sub(this));
+  };
 
   public toggleList() {
-    this._update((that) => {
-      that.showList = !this.showList;
-      return that;
-    });
+    this.showList = !this.showList;
+    this.notify();
   }
 
   public addTodo(todo: string) {
-    this._update((that) => {
-      that.todos.push(todo);
-      return that;
-    });
+    this.todos.push(todo);
+    this.notify();
   }
 
   public removeTodo(todo: string) {
-    this._update((that) => {
-      that.todos = that.todos.filter((item) => item !== todo);
-      return that;
-    });
+    this.todos = this.todos.filter((item) => item !== todo);
+    this.notify();
   }
 
   public saveTodos() {
@@ -75,19 +69,13 @@ export class TodoStore {
     const storedTodos = localStorage.getItem("svelte-todos");
 
     if (storedTodos) {
-      this._update((that) => {
-        that.todos = JSON.parse(storedTodos);
-        return that;
-      });
+      this.todos = JSON.parse(storedTodos);
     }
   }
 
   public deleteSavedTodos() {
     localStorage.removeItem("svelte-todos");
-    this._update((that) => {
-      that.todos = [];
-      return that;
-    });
+    this.todos = [];
   }
 }
 
