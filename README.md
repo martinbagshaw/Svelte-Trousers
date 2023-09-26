@@ -51,3 +51,9 @@ _Setup and stuff_
 - [writing css with svelte](https://css-tricks.com/what-i-like-about-writing-styles-with-svelte/)
 - [Todo list tutorial on MDN](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/Svelte_Todo_list_beginning)
 - Console logs have a dollar sign before them: `$: console.log(`todos ${todos}`);`
+
+_Project progression (see git history)_
+
+- Using this as a learning ground, ideally to implement reactive OOP with Svelte, with minial boilerplate
+- First iteration involved using stores, which seems to require a layer of arrow functions in the main Svelte component, which partially duplicate the logic in the Class store. Not ideal.
+- Second iteration simplifies the store a little. Still lots of boilerplate required.
